@@ -23,6 +23,9 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
                 .orElseGet(() -> roleRepository.save(new Role("ROLE_ADMIN")));
+        
+        Role userRole = roleRepository.findByName("ROLE_USER")
+            .orElseGet(() -> roleRepository.save(new Role("ROLE_USER")));
 
         if (userRepository.findByUsername("admin").isEmpty()) {
             User admin = new User();
@@ -30,6 +33,14 @@ public class DataInitializer implements CommandLineRunner {
             admin.setPassword(passwordEncoder.encode("password"));
             admin.setRoles(Set.of(adminRole));
             userRepository.save(admin);
+        }
+
+        if (userRepository.findByUsername("user").isEmpty()) {
+            User user = new User();
+            user.setUsername("user");
+            user.setPassword(passwordEncoder.encode("password"));
+            user.setRoles(Set.of(userRole));
+            userRepository.save(user);
         }
     }
 }
